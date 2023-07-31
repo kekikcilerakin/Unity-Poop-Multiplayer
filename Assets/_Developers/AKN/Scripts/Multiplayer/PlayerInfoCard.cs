@@ -12,6 +12,8 @@ public class PlayerInfoCard : MonoBehaviour
 
     public TMP_Text PlayerNameText;
     public RawImage PlayerAvatar;
+    public TMP_Text PlayerReadyText;
+    public bool Ready;
 
     protected Callback<AvatarImageLoaded_t> AvatarLoaded;
 
@@ -20,9 +22,22 @@ public class PlayerInfoCard : MonoBehaviour
         AvatarLoaded = Callback<AvatarImageLoaded_t>.Create(OnAvatarLoaded);
     }
 
+    public void ChangeReadyStatus()
+    {
+        if (Ready)
+        {
+            PlayerReadyText.text = "Ready";
+        }
+        else
+        {
+            PlayerReadyText.text = "";
+        }
+    }
+
     public void SetPlayerValues()
     {
         PlayerNameText.text = PlayerName;
+        ChangeReadyStatus();
 
         if (!isAvatarReceived)
             GetPlayerAvatar();

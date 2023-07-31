@@ -257,7 +257,7 @@ MonoBehaviour:
   cameraController: {fileID: 0}
   highlightedItem: {fileID: 0}
   highlightedTask: {fileID: 0}
-  playerType: 1
+  playerType: 0
   playerState: 0
   principalVisual: {fileID: 5532891206654458168}
   studentVisual: {fileID: 1879698907514557489}

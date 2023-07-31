@@ -88,6 +88,8 @@ public class PlayerController : NetworkBehaviour
         InputManager.Instance.OnTaskInteractCanceledAction += InputManager_OnTaskInteractCancelRequestedAction;
 
 
+        playerType = (PlayerType)UnityEngine.Random.Range(1,3);
+
         if (playerType == PlayerType.Principal)
         {
             principalVisual.SetActive(true);

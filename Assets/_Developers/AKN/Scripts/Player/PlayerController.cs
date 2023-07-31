@@ -4,8 +4,8 @@ using UnityEngine;
 public enum PlayerType
 {
     None = 0,
-    Student = 1,
-    Principal = 2,
+    Principal = 1,
+    Student = 2,
 }
 
 public enum PlayerState
@@ -39,9 +39,12 @@ public class PlayerController : MonoBehaviour
 
     private CharacterController characterController;
 
-    [Tooltip("Student = 1, Principal = 1.7")]
+    [SerializeField] private GameObject principalVisual;
+    [SerializeField] private GameObject studentVisual;
+
+    [Tooltip("Principal = 1.7, Student = 1")]
     [SerializeField] private float walkSpeed = 0.0f;
-    [Tooltip("Student = 2.8, Principal = 3")]
+    [Tooltip("Principal = 3, Student = 2.8")]
     [SerializeField] private float runSpeed = 0.0f;
 
     [SerializeField] private LayerMask interactableMask;
@@ -62,9 +65,27 @@ public class PlayerController : MonoBehaviour
     private float rotationVelocity;
     #endregion
 
+    private void InitializePlayer()
+    {
+        if (playerType == PlayerType.Principal)
+        {
+            principalVisual.SetActive(true);
+            walkSpeed = 1.7f;
+            runSpeed = 3.0f;
+        }
+        else if (playerType == PlayerType.Student)
+        {
+            studentVisual.SetActive(true);
+            walkSpeed = 1.0f;
+            runSpeed = 2.8f;
+        }
+    }
+
     private void Awake()
     {
         Instance = this;
+
+        InitializePlayer();
 
         if (walkSpeed == 0.0f || runSpeed == 0.0f) Debug.LogWarning("Walk and run speed are not set.");
 
@@ -82,6 +103,7 @@ public class PlayerController : MonoBehaviour
 
         InputManager.Instance.OnTaskInteractStartedAction += InputManager_OnTaskInteractStartRequestedAction;
         InputManager.Instance.OnTaskInteractCanceledAction += InputManager_OnTaskInteractCancelRequestedAction;
+        
     }
 
     private void InputManager_OnItemDropAction(object sender, EventArgs e)
@@ -117,7 +139,7 @@ public class PlayerController : MonoBehaviour
             return;
         }
         if (highlightedTask.GetRequiredItem() != InventoryController.GetItemInHand().GetItemSO())
-        { 
+        {
             Debug.Log($"Task requires {highlightedTask.GetRequiredItem()} but you have {InventoryController.GetItemInHand().GetItemSO()}");
             return;
         }
@@ -130,7 +152,7 @@ public class PlayerController : MonoBehaviour
 
     private void InputManager_OnTaskInteractCancelRequestedAction(object sender, EventArgs e)
     {
-        if(playerState != PlayerState.DoingTask)
+        if (playerState != PlayerState.DoingTask)
         {
             Debug.LogWarning($"CancelInteract failed: playerState needs to be DoingTask to cancel an interact.");
             return;
@@ -180,7 +202,7 @@ public class PlayerController : MonoBehaviour
         Item hitItem = hit.collider?.GetComponent<Item>();
         Task hitTask = hit.collider?.GetComponent<Task>();
 
-        if (hitItem != highlightedItem && hitItem != InventoryController.GetItemInHand() && !hitItem.GetHasItemBeenUsed() && playerType == PlayerType.Student)
+        if (hitItem != highlightedItem && hitItem != InventoryController.GetItemInHand() && playerType == PlayerType.Student)
         {
             SetHighlightedItem(hitItem);
         }

@@ -1,42 +1,38 @@
-using Poop.Player;
-using Poop.Player.Inventory;
+
 using UnityEngine;
 
-namespace Poop
+public class ItemVisual : MonoBehaviour
 {
-    public class ItemVisual : MonoBehaviour
+    private Item item;
+    private Outline outline;
+
+    private void Start()
     {
-        private Item item;
-        private Outline outline;
+        item = transform.parent.GetComponent<Item>();
+        outline = GetComponent<Outline>();
 
-        private void Start()
+        PlayerController.Instance.OnHighlightedItemChanged += PlayerController_OnSelectedItemChanged;
+    }
+
+    private void PlayerController_OnSelectedItemChanged(object sender, PlayerController.OnHighlightedItemChangedEventArgs e)
+    {
+        if (e.HighlightedItem == item)
         {
-            item = transform.parent.GetComponent<Item>();
-            outline = GetComponent<Outline>();
-
-            PlayerController.Instance.OnHighlightedItemChanged += PlayerController_OnSelectedItemChanged;
+            ShowOutline();
         }
-
-        private void PlayerController_OnSelectedItemChanged(object sender, PlayerController.OnHighlightedItemChangedEventArgs e)
+        else
         {
-            if (e.HighlightedItem == item)
-            {
-                ShowOutline();
-            }
-            else
-            {
-                HideOutline();
-            }
+            HideOutline();
         }
+    }
 
-        private void ShowOutline()
-        {
-            outline.enabled = true;
-        }
+    private void ShowOutline()
+    {
+        outline.enabled = true;
+    }
 
-        private void HideOutline()
-        {
-            outline.enabled = false;
-        }
+    private void HideOutline()
+    {
+        outline.enabled = false;
     }
 }

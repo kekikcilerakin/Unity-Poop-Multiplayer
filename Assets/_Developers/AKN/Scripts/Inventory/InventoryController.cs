@@ -1,74 +1,71 @@
 using System;
 using UnityEngine;
 
-namespace Poop.Player.Inventory
+public class InventoryController : MonoBehaviour
 {
-    public class InventoryController : MonoBehaviour
+    [SerializeField] private Item itemInHand;
+    public event EventHandler<OnItemInHandChangedEventArgs> OnItemInHandChanged;
+    public class OnItemInHandChangedEventArgs : EventArgs
     {
-        [SerializeField] private Item itemInHand;
-        public event EventHandler<OnItemInHandChangedEventArgs> OnItemInHandChanged;
-        public class OnItemInHandChangedEventArgs : EventArgs
+        public ItemSO ItemInHand;
+    }
+
+    [SerializeField] private Transform handTransform;
+
+    public void SetItemInHand(Item item)
+    {
+        if (item == null)
         {
-            public ItemSO ItemInHand;
+            itemInHand = null;
+
+            OnItemInHandChanged?.Invoke(this, new OnItemInHandChangedEventArgs
+            {
+                ItemInHand = null
+            });
+
+            return;
         }
 
-        [SerializeField] private Transform handTransform;
-
-        public void SetItemInHand(Item item)
+        if (itemInHand == null)
         {
-            if (item == null)
-            {
-                itemInHand = null;
-
-                OnItemInHandChanged?.Invoke(this, new OnItemInHandChangedEventArgs
-                {
-                    ItemInHand = null
-                });
-
-                return;
-            }
-
-            if (itemInHand == null)
-            {
-                itemInHand = item;
-                itemInHand.ParentToHand();
-
-                OnItemInHandChanged?.Invoke(this, new OnItemInHandChangedEventArgs
-                {
-                    ItemInHand = itemInHand.GetItemSO()
-                });
-
-                return;
-            }
-
-            //Swap Items
-            Vector3 newItemPosition = item.transform.position;
-
-            itemInHand.SwapPosition(newItemPosition);
             itemInHand = item;
-            item.ParentToHand();
+            itemInHand.ParentToHand();
 
             OnItemInHandChanged?.Invoke(this, new OnItemInHandChangedEventArgs
             {
                 ItemInHand = itemInHand.GetItemSO()
             });
 
+            return;
         }
 
-        public void DropItem()
-        {
-            itemInHand.UnparentFromHand();
-            SetItemInHand(null);
-        }
+        //Swap Items
+        Vector3 newItemPosition = item.transform.position;
 
-        public Item GetItemInHand()
-        {
-            return itemInHand;
-        }
+        itemInHand.SwapPosition(newItemPosition);
+        itemInHand = item;
+        item.ParentToHand();
 
-        public Transform GetHandTransform()
+        OnItemInHandChanged?.Invoke(this, new OnItemInHandChangedEventArgs
         {
-            return handTransform;
-        }
+            ItemInHand = itemInHand.GetItemSO()
+        });
+
+    }
+
+    public void DropItem()
+    {
+        itemInHand.UnparentFromHand();
+        SetItemInHand(null);
+    }
+
+    public Item GetItemInHand()
+    {
+        return itemInHand;
+    }
+
+    public Transform GetHandTransform()
+    {
+        return handTransform;
     }
 }

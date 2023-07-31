@@ -1,78 +1,61 @@
 using UnityEngine;
 
-namespace Poop.Player.Inventory
+public class Item : MonoBehaviour
 {
-    public class Item : MonoBehaviour
+    [SerializeField] private ItemSO item;
+    private SphereCollider sphereCollider;
+    private Rigidbody rb;
+
+    private void Start()
     {
-        [SerializeField] private ItemSO item;
-        private SphereCollider sphereCollider;
-        private Rigidbody rb;
+        if (item == null) Debug.LogError("Item can't be null!");
 
-        [SerializeField] bool hasItemBeenUsed = false;
+        sphereCollider = GetComponent<SphereCollider>();
+        rb = GetComponent<Rigidbody>();
+    }
 
-        private void Start()
-        {
-            if (item == null) Debug.LogError("Item can't be null!");
+    public ItemSO GetItemSO()
+    {
+        return item;
+    }
 
-            sphereCollider = GetComponent<SphereCollider>();
-            rb = GetComponent<Rigidbody>();
-        }
+    public void Interact()
+    {
+        PlayerController.Instance.InventoryController.SetItemInHand(this);
+    }
 
-        public ItemSO GetItemSO()
-        {
-            return item;
-        }
+    public void ShowCollider()
+    {
+        sphereCollider.enabled = true;
+    }
 
-        public bool GetHasItemBeenUsed()
-        {
-            return hasItemBeenUsed;
-        }
+    public void HideCollider()
+    {
+        sphereCollider.enabled = false;
+    }
 
-        public void SetHasItemBeenUsed(bool value)
-        {
-            hasItemBeenUsed = value;
-        }
+    public void ParentToHand()
+    {
+        transform.SetParent(PlayerController.Instance.InventoryController.GetHandTransform());
+        transform.localPosition = Vector3.zero;
+        HideCollider();
+        rb.isKinematic = true;
 
-        public void Interact()
-        {
-            if (hasItemBeenUsed) return;
+    }
 
-            PlayerController.Instance.InventoryController.SetItemInHand(this);
-        }
+    public void UnparentFromHand()
+    {
+        transform.SetParent(null);
+        transform.SetPositionAndRotation(transform.position, transform.rotation);
+        ShowCollider();
+        rb.isKinematic = false;
+    }
 
-        public void ShowCollider()
-        {
-            sphereCollider.enabled = true;
-        }
-
-        public void HideCollider()
-        {
-            sphereCollider.enabled = false;
-        }
-
-        public void ParentToHand()
-        {
-            transform.SetParent(PlayerController.Instance.InventoryController.GetHandTransform());
-            transform.localPosition = Vector3.zero;
-            HideCollider();
-            rb.isKinematic = true;
-
-        }
-
-        public void UnparentFromHand()
-        {
-            transform.SetParent(null);
-            transform.SetPositionAndRotation(transform.position, transform.rotation);
-            ShowCollider();
-            rb.isKinematic = false;
-        }
-
-        public void SwapPosition(Vector3 newItemPosition)
-        {
-            transform.SetParent(null);
-            transform.SetPositionAndRotation(newItemPosition, transform.rotation);
-            ShowCollider();
-            rb.isKinematic = false;
-        }
+    public void SwapPosition(Vector3 newItemPosition)
+    {
+        transform.SetParent(null);
+        transform.SetPositionAndRotation(newItemPosition, transform.rotation);
+        ShowCollider();
+        rb.isKinematic = false;
     }
 }

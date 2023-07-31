@@ -19,6 +19,8 @@ public class AnimationController : NetworkBehaviour
 
     private void Update()
     {
+        if (!player.isPlayerInitialized) return;
+
         if (isLocalPlayer)
         {
             animator.SetFloat(verticalHash, player.GetMoveAmount(), AnimationBlendSpeed, Time.deltaTime);

@@ -45,7 +45,7 @@ public class PlayerController : NetworkBehaviour
 
     [SerializeField] private GameObject principalVisual;
     [SerializeField] private GameObject studentVisual;
-    private bool isPlayerInitialized = false;
+    public bool isPlayerInitialized = false;
 
     [Tooltip("Principal = 1.7, Student = 1")]
     [SerializeField] private float walkSpeed = 0.0f;

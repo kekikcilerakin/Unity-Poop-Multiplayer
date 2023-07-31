@@ -87,8 +87,8 @@ public class PlayerController : NetworkBehaviour
         InputManager.Instance.OnTaskInteractStartedAction += InputManager_OnTaskInteractStartRequestedAction;
         InputManager.Instance.OnTaskInteractCanceledAction += InputManager_OnTaskInteractCancelRequestedAction;
 
-
-        playerType = (PlayerType)UnityEngine.Random.Range(1, 3);
+        principalVisual.SetActive(false);
+        studentVisual.SetActive(false);
 
         if (playerType == PlayerType.Principal)
         {
@@ -106,6 +106,11 @@ public class PlayerController : NetworkBehaviour
         }
 
         if (walkSpeed == 0.0f || runSpeed == 0.0f) Debug.LogWarning("Walk and run speed are not set.");
+
+        if (!isLocalPlayer)
+        {
+            cameraController.TPSCamera.gameObject.SetActive(false);
+        }
 
         cameraController.Initialize();
         isPlayerInitialized = true;

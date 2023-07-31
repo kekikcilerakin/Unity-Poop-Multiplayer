@@ -19,7 +19,7 @@ public class AnimationController : NetworkBehaviour
 
     private void Update()
     {
-        if (isOwned)
+        if (isLocalPlayer)
         {
             animator.SetFloat(verticalHash, player.GetMoveAmount(), AnimationBlendSpeed, Time.deltaTime);
         }

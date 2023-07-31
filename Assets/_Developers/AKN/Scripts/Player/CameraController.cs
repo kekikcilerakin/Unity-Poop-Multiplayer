@@ -1,9 +1,10 @@
 using Cinemachine;
 using UnityEngine;
+using Mirror;
 
-public class CameraController : MonoBehaviour
+public class CameraController : NetworkBehaviour
 {
-    [SerializeField] private CinemachineVirtualCamera TPSCamera;
+    public CinemachineVirtualCamera TPSCamera;
     public Transform PlayerCameraRoot;
 
     [SerializeField] private float topClamp = 70.0f;

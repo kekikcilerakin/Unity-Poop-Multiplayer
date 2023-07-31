@@ -429,18 +429,20 @@ MonoBehaviour:
   autoStartServerBuild: 1
   autoConnectClientBuild: 0
   sendRate: 60
-  offlineScene: 
-  onlineScene: 
+  offlineScene: Assets/Poop/Scenes/MainMenu.unity
+  onlineScene: Assets/Poop/Scenes/Lobby.unity
   transport: {fileID: 598381331}
   networkAddress: localhost
-  maxConnections: 100
+  maxConnections: 5
   disconnectInactiveConnections: 0
   disconnectInactiveTimeout: 60
   authenticator: {fileID: 0}
-  playerPrefab: {fileID: 0}
-  autoCreatePlayer: 0
+  playerPrefab: {fileID: 6102791462197594144, guid: 7c13156524b02cf489c458d2c289578f,
+    type: 3}
+  autoCreatePlayer: 1
   playerSpawnMethod: 0
-  spawnPrefabs: []
+  spawnPrefabs:
+  - {fileID: 5289672334375070322, guid: cc9e9a5482557f54d966e0fd7c02fdaa, type: 3}
   snapshotSettings:
     bufferTimeMultiplier: 2
     bufferLimit: 32
@@ -454,6 +456,7 @@ MonoBehaviour:
     deliveryTimeEmaDuration: 2
   connectionQualityInterval: 3
   timeInterpolationGui: 0
+  player: {fileID: 7880474832534549730, guid: cc9e9a5482557f54d966e0fd7c02fdaa, type: 3}
 --- !u!114 &598381331
 MonoBehaviour:
   m_ObjectHideFlags: 0

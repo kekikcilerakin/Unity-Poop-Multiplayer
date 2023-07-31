@@ -442,7 +442,7 @@ MonoBehaviour:
   autoCreatePlayer: 1
   playerSpawnMethod: 0
   spawnPrefabs:
-  - {fileID: 5289672334375070322, guid: cc9e9a5482557f54d966e0fd7c02fdaa, type: 3}
+  - {fileID: 8196968114715926256, guid: e7b8c1ed77c39384d9618f3ad40d1d2a, type: 3}
   snapshotSettings:
     bufferTimeMultiplier: 2
     bufferLimit: 32
@@ -456,7 +456,7 @@ MonoBehaviour:
     deliveryTimeEmaDuration: 2
   connectionQualityInterval: 3
   timeInterpolationGui: 0
-  player: {fileID: 7880474832534549730, guid: cc9e9a5482557f54d966e0fd7c02fdaa, type: 3}
+  player: {fileID: 3499910475419551157, guid: e7b8c1ed77c39384d9618f3ad40d1d2a, type: 3}
 --- !u!114 &598381331
 MonoBehaviour:
   m_ObjectHideFlags: 0

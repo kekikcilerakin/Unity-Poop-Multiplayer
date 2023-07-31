@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Poop/Scenes/Lobby.unity
     guid: d31e250c261ae7e45bd33ed5db61ee64
+  - enabled: 1
+    path: Assets/Poop/Scenes/Game.unity
+    guid: 1c9e4c8e088160948ada551b6d308f0f
   m_configObjects: {}

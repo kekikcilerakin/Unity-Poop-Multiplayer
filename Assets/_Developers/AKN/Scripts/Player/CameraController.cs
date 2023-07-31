@@ -4,24 +4,31 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
     [SerializeField] private CinemachineVirtualCamera TPSCamera;
-    [SerializeField] private Transform playerCameraRoot;
+    public Transform PlayerCameraRoot;
 
     [SerializeField] private float topClamp = 70.0f;
     [SerializeField] private float bottomClamp = -30.0f;
+
+    private bool isCameraInitialized = false;
 
     #region Cached Variables
     private float cinemachineTargetY;
     private float cinemachineTargetX;
     #endregion
 
-    private void Start()
+    public void Initialize()
     {
-        cinemachineTargetY = playerCameraRoot.transform.rotation.eulerAngles.y;
-        TPSCamera.Follow = playerCameraRoot;
+        cinemachineTargetY = PlayerCameraRoot.transform.rotation.eulerAngles.y;
+        TPSCamera.Follow = PlayerCameraRoot;
+        TPSCamera.LookAt = PlayerCameraRoot;
+
+        isCameraInitialized = true;
     }
 
     private void LateUpdate()
     {
+        if (!isCameraInitialized) return;
+
         HandleRotate();
     }
 
@@ -37,7 +44,7 @@ public class CameraController : MonoBehaviour
         cinemachineTargetY = ClampAngle(cinemachineTargetY, float.MinValue, float.MaxValue);
         cinemachineTargetX = ClampAngle(cinemachineTargetX, bottomClamp, topClamp);
 
-        playerCameraRoot.transform.rotation = Quaternion.Euler(cinemachineTargetX, cinemachineTargetY, 0.0f);
+        PlayerCameraRoot.transform.rotation = Quaternion.Euler(cinemachineTargetX, cinemachineTargetY, 0.0f);
     }
 
     private static float ClampAngle(float lfAngle, float lfMin, float lfMax)

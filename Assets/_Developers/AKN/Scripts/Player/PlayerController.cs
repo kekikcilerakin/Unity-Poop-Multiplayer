@@ -1,5 +1,7 @@
 using System;
+using Mirror;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public enum PlayerType
 {
@@ -14,11 +16,13 @@ public enum PlayerState
     DoingTask = 1,
 }
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : NetworkBehaviour
 {
     public static PlayerController Instance { get; private set; }
 
     public InventoryController InventoryController { get; private set; }
+
+    [SerializeField] private CameraController cameraController;
 
     [SerializeField] private Item highlightedItem;
     public event EventHandler<OnHighlightedItemChangedEventArgs> OnHighlightedItemChanged;
@@ -41,6 +45,7 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private GameObject principalVisual;
     [SerializeField] private GameObject studentVisual;
+    private bool isPlayerInitialized = false;
 
     [Tooltip("Principal = 1.7, Student = 1")]
     [SerializeField] private float walkSpeed = 0.0f;
@@ -67,43 +72,41 @@ public class PlayerController : MonoBehaviour
 
     private void InitializePlayer()
     {
+        Instance = this;
+
+        characterController = GetComponent<CharacterController>();
+        InventoryController = GetComponent<InventoryController>();
+        cameraController = GetComponent<CameraController>();
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        InputManager.Instance.OnItemInteractAction += InputManager_OnItemInteractAction;
+        InputManager.Instance.OnItemDropAction += InputManager_OnItemDropAction;
+
+        InputManager.Instance.OnTaskInteractStartedAction += InputManager_OnTaskInteractStartRequestedAction;
+        InputManager.Instance.OnTaskInteractCanceledAction += InputManager_OnTaskInteractCancelRequestedAction;
+
+
         if (playerType == PlayerType.Principal)
         {
             principalVisual.SetActive(true);
             walkSpeed = 1.7f;
             runSpeed = 3.0f;
+            cameraController.PlayerCameraRoot = principalVisual.transform.GetChild(0);
         }
         else if (playerType == PlayerType.Student)
         {
             studentVisual.SetActive(true);
             walkSpeed = 1.0f;
             runSpeed = 2.8f;
+            cameraController.PlayerCameraRoot = studentVisual.transform.GetChild(0);
         }
-    }
-
-    private void Awake()
-    {
-        Instance = this;
-
-        InitializePlayer();
 
         if (walkSpeed == 0.0f || runSpeed == 0.0f) Debug.LogWarning("Walk and run speed are not set.");
 
-        characterController = GetComponent<CharacterController>();
-        InventoryController = GetComponent<InventoryController>();
-
-        //Cursor.lockState = CursorLockMode.Locked;
-        //Cursor.visible = false;
-    }
-
-    public void Start()
-    {
-        InputManager.Instance.OnItemInteractAction += InputManager_OnItemInteractAction;
-        InputManager.Instance.OnItemDropAction += InputManager_OnItemDropAction;
-
-        InputManager.Instance.OnTaskInteractStartedAction += InputManager_OnTaskInteractStartRequestedAction;
-        InputManager.Instance.OnTaskInteractCanceledAction += InputManager_OnTaskInteractCancelRequestedAction;
-        
+        cameraController.Initialize();
+        isPlayerInitialized = true;
     }
 
     private void InputManager_OnItemDropAction(object sender, EventArgs e)
@@ -166,9 +169,23 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        HandleMove();
-        HandleRotate();
-        HandleInteraction();
+        if (SceneManager.GetActiveScene().name == "Game")
+        {
+            if (!isPlayerInitialized)
+            {
+                InitializePlayer();
+            }
+
+            if (isOwned)
+            {
+                HandleMove();
+                HandleRotate();
+                HandleInteraction();
+            }
+        }
+
+
+
     }
 
     private void HandleMove()

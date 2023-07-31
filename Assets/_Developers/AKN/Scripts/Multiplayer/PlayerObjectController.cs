@@ -23,6 +23,11 @@ public class PlayerObjectController : NetworkBehaviour
         }
     }
 
+    private void Start()
+    {
+        DontDestroyOnLoad(this.gameObject);
+    }
+
     public override void OnStartAuthority()
     {
         CmdSetPlayerName(SteamFriends.GetPersonaName().ToString());
@@ -86,6 +91,20 @@ public class PlayerObjectController : NetworkBehaviour
         {
             CmdSetPlayerReady();
         }
+    }
+
+    public void CanStartGame(string sceneName)
+    {
+        if (isOwned)
+        {
+            CmdCanStartGame(sceneName);
+        }
+    }
+
+    [Command]
+    public void CmdCanStartGame(string sceneName)
+    {
+        manager.StartGame(sceneName);
     }
 
 }

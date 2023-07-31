@@ -357,7 +357,7 @@ MonoBehaviour:
   syncScale: 0
   interpolatePosition: 1
   interpolateRotation: 1
-  interpolateScale: 1
+  interpolateScale: 0
   sendIntervalMultiplier: 1
   timelineOffset: 0
   showGizmos: 0
@@ -431,11 +431,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Student_Visual
-      objectReference: {fileID: 0}
-    - target: {fileID: 4301397032380766812, guid: 63f592864fda5664fad6ca1b9f266ce7,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -522,11 +517,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Principal_Visual
-      objectReference: {fileID: 0}
-    - target: {fileID: 1835546979219909800, guid: 76f79a2283225b348ac0c05028883a30,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

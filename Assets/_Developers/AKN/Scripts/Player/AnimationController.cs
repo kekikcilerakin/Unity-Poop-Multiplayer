@@ -1,6 +1,7 @@
 using UnityEngine;
+using Mirror;
 
-public class AnimationController : MonoBehaviour
+public class AnimationController : NetworkBehaviour
 {
     private const float AnimationBlendSpeed = 0.1f;
     private Animator animator;
@@ -18,6 +19,9 @@ public class AnimationController : MonoBehaviour
 
     private void Update()
     {
-        animator.SetFloat(verticalHash, player.GetMoveAmount(), AnimationBlendSpeed, Time.deltaTime);
+        if (isOwned)
+        {
+            animator.SetFloat(verticalHash, player.GetMoveAmount(), AnimationBlendSpeed, Time.deltaTime);
+        }
     }
 }

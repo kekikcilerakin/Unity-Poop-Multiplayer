@@ -88,7 +88,7 @@ public class PlayerController : NetworkBehaviour
         InputManager.Instance.OnTaskInteractCanceledAction += InputManager_OnTaskInteractCancelRequestedAction;
 
 
-        playerType = (PlayerType)UnityEngine.Random.Range(1,3);
+        playerType = (PlayerType)UnityEngine.Random.Range(1, 3);
 
         if (playerType == PlayerType.Principal)
         {
@@ -185,9 +185,6 @@ public class PlayerController : NetworkBehaviour
                 HandleInteraction();
             }
         }
-
-
-
     }
 
     private void HandleMove()

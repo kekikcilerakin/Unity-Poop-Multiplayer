@@ -33,7 +33,7 @@ public class Item : MonoBehaviour
 
     public void Interact()
     {
-        if (hasItemBeenUsed) return;
+        //if (hasItemBeenUsed) return;
 
         PlayerController.LocalInstance.InventoryController.SetItemInHand(this);
     }

@@ -5737,6 +5737,7 @@ GameObject:
   - component: {fileID: 8490053934515710149}
   - component: {fileID: 3757543382497351774}
   - component: {fileID: 5901527039608319254}
+  - component: {fileID: 2288048087674655227}
   - component: {fileID: 7267424866914187666}
   - component: {fileID: 3253837954153576213}
   - component: {fileID: 6996611670438297535}
@@ -5805,15 +5806,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highlightedItem: {fileID: 0}
   highlightedTask: {fileID: 0}
-  playerType: 2
+  playerType: 1
   playerState: 0
   walkSpeed: 0
   runSpeed: 0
   interactableMask:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 192
   itemInteractDistance: 6
   taskInteractDistance: 6
+--- !u!114 &2288048087674655227
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8196968114715926256}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c6d504346c200d46b4e2fc510444147, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemInHand: {fileID: 0}
+  handTransform: {fileID: 4327732300114023365}
 --- !u!114 &7267424866914187666
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5868,9 +5883,9 @@ MonoBehaviour:
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
-  SyncScaleX: 1
-  SyncScaleY: 1
-  SyncScaleZ: 1
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
   PositionThreshold: 0.001
   RotAngleThreshold: 0.01
   ScaleThreshold: 0.01

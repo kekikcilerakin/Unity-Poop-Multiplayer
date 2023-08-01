@@ -20,7 +20,6 @@ public class PlayerController : NetworkBehaviour
     public static event EventHandler OnAnyPlayerSpawned;
     public static PlayerController LocalInstance { get; private set; }
 
-    public InventoryController InventoryController { get; private set; }
 
     [SerializeField] private Item highlightedItem;
     public event EventHandler<OnHighlightedItemChangedEventArgs> OnHighlightedItemChanged;
@@ -39,6 +38,7 @@ public class PlayerController : NetworkBehaviour
     [SerializeField] private PlayerType playerType;
     [SerializeField] private PlayerState playerState;
 
+    public InventoryController InventoryController { get; private set; }
     private CameraController cameraController;
     private CharacterController characterController;
 
@@ -72,6 +72,7 @@ public class PlayerController : NetworkBehaviour
             LocalInstance = this;
         }
 
+        InventoryController = GetComponent<InventoryController>();
         OnAnyPlayerSpawned?.Invoke(this, EventArgs.Empty);
     }
 
@@ -196,12 +197,15 @@ public class PlayerController : NetworkBehaviour
 
     private void HandleInteraction()
     {
+        if (playerType != PlayerType.Student) return;
+
         var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         bool hitSomething = Physics.Raycast(ray, out RaycastHit hit, itemInteractDistance, interactableMask);
         Item hitItem = hit.collider?.GetComponent<Item>();
         Task hitTask = hit.collider?.GetComponent<Task>();
 
-        if (hitItem != highlightedItem && hitItem != InventoryController.GetItemInHand() && !hitItem.GetHasItemBeenUsed() && playerType == PlayerType.Student)
+        //if (hitItem != highlightedItem && hitItem != InventoryController.GetItemInHand() && !hitItem.GetHasItemBeenUsed() && playerType == PlayerType.Student)
+        if (hitItem != highlightedItem && hitItem != InventoryController.GetItemInHand())
         {
             SetHighlightedItem(hitItem);
         }
@@ -210,7 +214,7 @@ public class PlayerController : NetworkBehaviour
             SetHighlightedItem(null);
         }
 
-        if (hitTask != highlightedTask && playerType == PlayerType.Student)
+        if (hitTask != highlightedTask)
         {
             SetHighlightedTask(hitTask);
         }

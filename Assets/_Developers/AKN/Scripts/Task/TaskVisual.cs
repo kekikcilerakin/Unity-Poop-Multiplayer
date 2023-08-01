@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class TaskVisual : MonoBehaviour
@@ -12,8 +13,25 @@ public class TaskVisual : MonoBehaviour
         task = transform.parent.GetComponent<Task>();
         outline = GetComponent<Outline>();
 
-        PlayerController.LocalInstance.InventoryController.OnItemInHandChanged += InventoryController_OnItemInHandChanged;
         task.OnActivePlayerChanged += Task_OnActivePlayerChanged;
+
+        if (PlayerController.LocalInstance != null)
+        {
+            PlayerController.LocalInstance.InventoryController.OnItemInHandChanged += InventoryController_OnItemInHandChanged;
+        }
+        else
+        {
+            PlayerController.OnAnyPlayerSpawned += PlayerController_OnAnyPlayerSpawned;
+        }
+    }
+
+    private void PlayerController_OnAnyPlayerSpawned(object sender, EventArgs e)
+    {
+        if (PlayerController.LocalInstance != null)
+        {
+            PlayerController.LocalInstance.InventoryController.OnItemInHandChanged -= InventoryController_OnItemInHandChanged;
+            PlayerController.LocalInstance.InventoryController.OnItemInHandChanged += InventoryController_OnItemInHandChanged;
+        }
     }
 
     private void Task_OnActivePlayerChanged(object sender, Task.OnActivePlayerChangedEventArgs e)
@@ -46,7 +64,7 @@ public class TaskVisual : MonoBehaviour
             PlayerController.LocalInstance.InventoryController.GetItemInHand().SetHasItemBeenUsed(true);
             PlayerController.LocalInstance.InventoryController.DropItem();
 
-            //DÜZENLENECEK
+            //Dï¿½ZENLENECEK
         }
     }
 

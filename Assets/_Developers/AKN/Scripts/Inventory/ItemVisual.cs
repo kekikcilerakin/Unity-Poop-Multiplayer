@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class ItemVisual : MonoBehaviour
@@ -10,10 +11,27 @@ public class ItemVisual : MonoBehaviour
         item = transform.parent.GetComponent<Item>();
         outline = GetComponent<Outline>();
 
-        //PlayerController.LocalInstance.OnHighlightedItemChanged += PlayerController_OnSelectedItemChanged;
+        if (PlayerController.LocalInstance != null)
+        {
+            PlayerController.LocalInstance.OnHighlightedItemChanged += PlayerController_OnHighlightedItemChanged;
+        }
+        else
+        {
+            PlayerController.OnAnyPlayerSpawned += PlayerController_OnAnyPlayerSpawned;
+        }
+
     }
 
-    private void PlayerController_OnSelectedItemChanged(object sender, PlayerController.OnHighlightedItemChangedEventArgs e)
+    private void PlayerController_OnAnyPlayerSpawned(object sender, EventArgs e)
+    {
+        if (PlayerController.LocalInstance != null)
+        {
+            PlayerController.LocalInstance.OnHighlightedItemChanged -= PlayerController_OnHighlightedItemChanged;
+            PlayerController.LocalInstance.OnHighlightedItemChanged += PlayerController_OnHighlightedItemChanged;
+        }
+    }
+
+    private void PlayerController_OnHighlightedItemChanged(object sender, PlayerController.OnHighlightedItemChangedEventArgs e)
     {
         if (e.HighlightedItem == item)
         {

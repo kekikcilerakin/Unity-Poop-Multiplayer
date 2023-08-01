@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &4398941309779311744
+--- !u!1 &2195481590631500432
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,40 +8,56 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1949968408912845435}
-  - component: {fileID: 4941925780637083504}
-  m_Layer: 0
-  m_Name: Logger
+  - component: {fileID: 2195481590631500433}
+  - component: {fileID: 6143900078212742849}
+  - component: {fileID: 2994811481858717979}
+  m_Layer: 7
+  m_Name: _BaseTask
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1949968408912845435
+--- !u!4 &2195481590631500433
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4398941309779311744}
-  serializedVersion: 2
+  m_GameObject: {fileID: 2195481590631500432}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4941925780637083504
+--- !u!114 &6143900078212742849
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4398941309779311744}
+  m_GameObject: {fileID: 2195481590631500432}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 668aed2199791bf4fbe1724d08d71b8b, type: 3}
+  m_Script: {fileID: 11500000, guid: d43ec2cccd0069140a9940c717410bc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fontSize: 18
+  requiredItem: {fileID: 0}
+  completeTime: 0
+  isActiveTask: 0
+--- !u!65 &2994811481858717979
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2195481590631500432}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}

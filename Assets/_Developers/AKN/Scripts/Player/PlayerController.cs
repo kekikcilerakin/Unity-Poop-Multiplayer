@@ -1,13 +1,12 @@
 using System;
-using Mirror;
+using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public enum PlayerType
 {
     None = 0,
-    Principal = 1,
-    Student = 2,
+    Student = 1,
+    Principal = 2,
 }
 
 public enum PlayerState
@@ -18,11 +17,10 @@ public enum PlayerState
 
 public class PlayerController : NetworkBehaviour
 {
-    public static PlayerController Instance { get; private set; }
+    public static event EventHandler OnAnyPlayerSpawned;
+    public static PlayerController LocalInstance { get; private set; }
 
     public InventoryController InventoryController { get; private set; }
-
-    [SerializeField] private CameraController cameraController;
 
     [SerializeField] private Item highlightedItem;
     public event EventHandler<OnHighlightedItemChangedEventArgs> OnHighlightedItemChanged;
@@ -41,15 +39,12 @@ public class PlayerController : NetworkBehaviour
     [SerializeField] private PlayerType playerType;
     [SerializeField] private PlayerState playerState;
 
+    private CameraController cameraController;
     private CharacterController characterController;
 
-    [SerializeField] private GameObject principalVisual;
-    [SerializeField] private GameObject studentVisual;
-    public bool isPlayerInitialized = false;
-
-    [Tooltip("Principal = 1.7, Student = 1")]
+    [Tooltip("Student = 1, Principal = 1.7")]
     [SerializeField] private float walkSpeed = 0.0f;
-    [Tooltip("Principal = 3, Student = 2.8")]
+    [Tooltip("Student = 2.8, Principal = 3")]
     [SerializeField] private float runSpeed = 0.0f;
 
     [SerializeField] private LayerMask interactableMask;
@@ -70,50 +65,42 @@ public class PlayerController : NetworkBehaviour
     private float rotationVelocity;
     #endregion
 
-    private void InitializePlayer()
+    public override void OnNetworkSpawn()
     {
-        Instance = this;
+        if (IsOwner)
+        {
+            LocalInstance = this;
+        }
 
+        OnAnyPlayerSpawned?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void Start()
+    {
         characterController = GetComponent<CharacterController>();
-        InventoryController = GetComponent<InventoryController>();
         cameraController = GetComponent<CameraController>();
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        if (playerType == PlayerType.Principal)
+        {
+            walkSpeed = 1.7f;
+            runSpeed = 3.0f;
+        }
+        else if (playerType == PlayerType.Student)
+        {
+            walkSpeed = 1.0f;
+            runSpeed = 2.8f;
+        }
+
+        if (walkSpeed == 0.0f || runSpeed == 0.0f) Debug.LogWarning("Walk and run speed are not set.");
 
         InputManager.Instance.OnItemInteractAction += InputManager_OnItemInteractAction;
         InputManager.Instance.OnItemDropAction += InputManager_OnItemDropAction;
 
         InputManager.Instance.OnTaskInteractStartedAction += InputManager_OnTaskInteractStartRequestedAction;
         InputManager.Instance.OnTaskInteractCanceledAction += InputManager_OnTaskInteractCancelRequestedAction;
-
-        principalVisual.SetActive(false);
-        studentVisual.SetActive(false);
-
-        if (playerType == PlayerType.Principal)
-        {
-            principalVisual.SetActive(true);
-            walkSpeed = 1.7f;
-            runSpeed = 3.0f;
-            cameraController.PlayerCameraRoot = principalVisual.transform.GetChild(0);
-        }
-        else if (playerType == PlayerType.Student)
-        {
-            studentVisual.SetActive(true);
-            walkSpeed = 1.0f;
-            runSpeed = 2.8f;
-            cameraController.PlayerCameraRoot = studentVisual.transform.GetChild(0);
-        }
-
-        if (walkSpeed == 0.0f || runSpeed == 0.0f) Debug.LogWarning("Walk and run speed are not set.");
-
-        if (!isLocalPlayer)
-        {
-            cameraController.TPSCamera.gameObject.SetActive(false);
-        }
-
-        cameraController.Initialize();
-        isPlayerInitialized = true;
     }
 
     private void InputManager_OnItemDropAction(object sender, EventArgs e)
@@ -149,7 +136,7 @@ public class PlayerController : NetworkBehaviour
             return;
         }
         if (highlightedTask.GetRequiredItem() != InventoryController.GetItemInHand().GetItemSO())
-        {
+        { 
             Debug.Log($"Task requires {highlightedTask.GetRequiredItem()} but you have {InventoryController.GetItemInHand().GetItemSO()}");
             return;
         }
@@ -162,7 +149,7 @@ public class PlayerController : NetworkBehaviour
 
     private void InputManager_OnTaskInteractCancelRequestedAction(object sender, EventArgs e)
     {
-        if (playerState != PlayerState.DoingTask)
+        if(playerState != PlayerState.DoingTask)
         {
             Debug.LogWarning($"CancelInteract failed: playerState needs to be DoingTask to cancel an interact.");
             return;
@@ -176,20 +163,11 @@ public class PlayerController : NetworkBehaviour
 
     private void Update()
     {
-        if (SceneManager.GetActiveScene().name == "Game")
-        {
-            if (!isPlayerInitialized)
-            {
-                InitializePlayer();
-            }
+        if (!IsOwner) return;
 
-            if (isOwned)
-            {
-                HandleMove();
-                HandleRotate();
-                HandleInteraction();
-            }
-        }
+        HandleMove();
+        HandleRotate();
+        HandleInteraction();
     }
 
     private void HandleMove()
@@ -223,7 +201,7 @@ public class PlayerController : NetworkBehaviour
         Item hitItem = hit.collider?.GetComponent<Item>();
         Task hitTask = hit.collider?.GetComponent<Task>();
 
-        if (hitItem != highlightedItem && hitItem != InventoryController.GetItemInHand() && playerType == PlayerType.Student)
+        if (hitItem != highlightedItem && hitItem != InventoryController.GetItemInHand() && !hitItem.GetHasItemBeenUsed() && playerType == PlayerType.Student)
         {
             SetHighlightedItem(hitItem);
         }

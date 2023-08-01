@@ -1,35 +1,34 @@
 using Cinemachine;
+using Unity.Netcode;
 using UnityEngine;
-using Mirror;
 
 public class CameraController : NetworkBehaviour
 {
-    public CinemachineVirtualCamera TPSCamera;
-    public Transform PlayerCameraRoot;
+    [SerializeField] private CinemachineVirtualCamera TPSCamera;
+    [SerializeField] private Transform playerCameraRoot;
 
     [SerializeField] private float topClamp = 70.0f;
     [SerializeField] private float bottomClamp = -30.0f;
-
-    private bool isCameraInitialized = false;
 
     #region Cached Variables
     private float cinemachineTargetY;
     private float cinemachineTargetX;
     #endregion
 
-    public void Initialize()
+    private void Start()
     {
-        cinemachineTargetY = PlayerCameraRoot.transform.rotation.eulerAngles.y;
-        TPSCamera.Follow = PlayerCameraRoot;
-        TPSCamera.LookAt = PlayerCameraRoot;
+        if (!IsOwner)
+        {
+            TPSCamera.gameObject.SetActive(false);
+        }
 
-        isCameraInitialized = true;
+        cinemachineTargetY = playerCameraRoot.transform.rotation.eulerAngles.y;
+        TPSCamera.Follow = playerCameraRoot;
+        TPSCamera.LookAt = playerCameraRoot;
     }
 
     private void LateUpdate()
     {
-        if (!isCameraInitialized) return;
-
         HandleRotate();
     }
 
@@ -45,7 +44,7 @@ public class CameraController : NetworkBehaviour
         cinemachineTargetY = ClampAngle(cinemachineTargetY, float.MinValue, float.MaxValue);
         cinemachineTargetX = ClampAngle(cinemachineTargetX, bottomClamp, topClamp);
 
-        PlayerCameraRoot.transform.rotation = Quaternion.Euler(cinemachineTargetX, cinemachineTargetY, 0.0f);
+        playerCameraRoot.transform.rotation = Quaternion.Euler(cinemachineTargetX, cinemachineTargetY, 0.0f);
     }
 
     private static float ClampAngle(float lfAngle, float lfMin, float lfMax)

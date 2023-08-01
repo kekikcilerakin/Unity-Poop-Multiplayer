@@ -1,4 +1,3 @@
-
 using System;
 using UnityEngine;
 
@@ -55,4 +54,6 @@ public class Task : MonoBehaviour
             ActivePlayer = activePlayer
         });
     }
+
+
 }

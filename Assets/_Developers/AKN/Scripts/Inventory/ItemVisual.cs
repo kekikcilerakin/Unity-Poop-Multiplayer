@@ -1,4 +1,3 @@
-
 using UnityEngine;
 
 public class ItemVisual : MonoBehaviour
@@ -11,7 +10,7 @@ public class ItemVisual : MonoBehaviour
         item = transform.parent.GetComponent<Item>();
         outline = GetComponent<Outline>();
 
-        PlayerController.Instance.OnHighlightedItemChanged += PlayerController_OnSelectedItemChanged;
+        //PlayerController.LocalInstance.OnHighlightedItemChanged += PlayerController_OnSelectedItemChanged;
     }
 
     private void PlayerController_OnSelectedItemChanged(object sender, PlayerController.OnHighlightedItemChangedEventArgs e)

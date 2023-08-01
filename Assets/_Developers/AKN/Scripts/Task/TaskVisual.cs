@@ -12,7 +12,7 @@ public class TaskVisual : MonoBehaviour
         task = transform.parent.GetComponent<Task>();
         outline = GetComponent<Outline>();
 
-        PlayerController.Instance.InventoryController.OnItemInHandChanged += InventoryController_OnItemInHandChanged;
+        PlayerController.LocalInstance.InventoryController.OnItemInHandChanged += InventoryController_OnItemInHandChanged;
         task.OnActivePlayerChanged += Task_OnActivePlayerChanged;
     }
 
@@ -43,10 +43,10 @@ public class TaskVisual : MonoBehaviour
             Debug.Log("Task Completed");
             task.SetIsTaskCompleted(true);
             HideOutline();
-            PlayerController.Instance.InventoryController.GetItemInHand().gameObject.layer = 0;
-            PlayerController.Instance.InventoryController.DropItem();
+            PlayerController.LocalInstance.InventoryController.GetItemInHand().SetHasItemBeenUsed(true);
+            PlayerController.LocalInstance.InventoryController.DropItem();
 
-            //Dï¿½ZENLENECEK
+            //DÜZENLENECEK
         }
     }
 

@@ -11,7 +11,7 @@ public class InputManager : MonoBehaviour
 
     public event EventHandler OnTaskInteractStartedAction;
     public event EventHandler OnTaskInteractCanceledAction;
-
+        
     private PlayerInputActions inputActions;
 
     public Vector2 Move { get; private set; }
@@ -81,7 +81,7 @@ public class InputManager : MonoBehaviour
     {
         OnTaskInteractCanceledAction?.Invoke(this, EventArgs.Empty);
     }
-
+    
     public void DisableMovement()
     {
         Move = Vector2.zero;

@@ -6,6 +6,8 @@ public class Item : MonoBehaviour
     private SphereCollider sphereCollider;
     private Rigidbody rb;
 
+    [SerializeField] bool hasItemBeenUsed = false;
+
     private void Start()
     {
         if (item == null) Debug.LogError("Item can't be null!");
@@ -19,9 +21,21 @@ public class Item : MonoBehaviour
         return item;
     }
 
+    public bool GetHasItemBeenUsed()
+    {
+        return hasItemBeenUsed;
+    }
+
+    public void SetHasItemBeenUsed(bool value)
+    {
+        hasItemBeenUsed = value;
+    }
+
     public void Interact()
     {
-        PlayerController.Instance.InventoryController.SetItemInHand(this);
+        if (hasItemBeenUsed) return;
+
+        PlayerController.LocalInstance.InventoryController.SetItemInHand(this);
     }
 
     public void ShowCollider()
@@ -36,7 +50,7 @@ public class Item : MonoBehaviour
 
     public void ParentToHand()
     {
-        transform.SetParent(PlayerController.Instance.InventoryController.GetHandTransform());
+        transform.SetParent(PlayerController.LocalInstance.InventoryController.GetHandTransform());
         transform.localPosition = Vector3.zero;
         HideCollider();
         rb.isKinematic = true;

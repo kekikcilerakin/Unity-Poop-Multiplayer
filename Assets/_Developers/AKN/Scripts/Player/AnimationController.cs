@@ -1,29 +1,36 @@
+using Unity.Netcode;
 using UnityEngine;
-using Mirror;
 
 public class AnimationController : NetworkBehaviour
 {
-    private const float AnimationBlendSpeed = 0.1f;
     private Animator animator;
-    private PlayerController player;
+    private PlayerController playerController;
 
+    #region Constant Variables
+    private const float AnimationBlendSpeed = 0.1f;
+    #endregion
+
+    #region Cached Variables
     private int verticalHash;
+    #endregion
 
-    private void Start()
+    private void Awake()
     {
         animator = GetComponent<Animator>();
-        player = GetComponentInParent<PlayerController>();
+        playerController = GetComponentInParent<PlayerController>();
 
         verticalHash = Animator.StringToHash("Vertical");
     }
 
     private void Update()
     {
-        if (!player.isPlayerInitialized) return;
+        if (!IsOwner) return;
 
-        if (isLocalPlayer)
+        animator.SetFloat(verticalHash, playerController.GetMoveAmount(), AnimationBlendSpeed, Time.deltaTime);
+
+        if (Input.GetKeyDown(KeyCode.E))
         {
-            animator.SetFloat(verticalHash, player.GetMoveAmount(), AnimationBlendSpeed, Time.deltaTime);
+            animator.SetTrigger("TakeItem");
         }
     }
 }

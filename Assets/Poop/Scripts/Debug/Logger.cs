@@ -42,7 +42,7 @@ public class Logger : MonoBehaviour
         else if (type == LogType.Error)
             queue.Enqueue($"<color=\"red\">{DateTime.Now.ToString("HH:mm:ss")} {message}</color>");
 
-        if (queue.Count > 10)
+        if (queue.Count > 7)
         {
             queue.Dequeue();
         }

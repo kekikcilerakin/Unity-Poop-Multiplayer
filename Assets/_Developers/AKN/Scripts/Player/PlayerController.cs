@@ -274,4 +274,9 @@ public class PlayerController : NetworkBehaviour
             HighlightedTask = highlightedTask
         });
     }
+
+    public NetworkObject GetNetworkObject()
+    {
+        return NetworkObject;
+    }
 }

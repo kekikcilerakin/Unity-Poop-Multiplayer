@@ -1,10 +1,13 @@
+using Unity.Netcode;
 using UnityEngine;
 
-public class Item : MonoBehaviour
+public class Item : NetworkBehaviour
 {
     [SerializeField] private ItemSO item;
     private SphereCollider sphereCollider;
     private Rigidbody rb;
+
+    private Transform targetTransform;
 
     [SerializeField] bool hasItemBeenUsed = false;
 
@@ -50,26 +53,44 @@ public class Item : MonoBehaviour
 
     public void ParentToHand()
     {
-        transform.SetParent(PlayerController.LocalInstance.InventoryController.GetHandTransform());
-        transform.localPosition = Vector3.zero;
-        HideCollider();
-        rb.isKinematic = true;
-
+        ParentToHandServerRpc(PlayerController.LocalInstance.GetNetworkObject());
     }
 
     public void UnparentFromHand()
     {
-        transform.SetParent(null);
+        targetTransform = null;
         transform.SetPositionAndRotation(transform.position, transform.rotation);
         ShowCollider();
-        rb.isKinematic = false;
     }
 
     public void SwapPosition(Vector3 newItemPosition)
     {
-        transform.SetParent(null);
+        targetTransform = null;
         transform.SetPositionAndRotation(newItemPosition, transform.rotation);
         ShowCollider();
-        rb.isKinematic = false;
+    }
+
+    private void LateUpdate()
+    {
+        if (targetTransform == null) return;
+
+        transform.position = targetTransform.position;
+        transform.rotation = targetTransform.rotation;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void ParentToHandServerRpc(NetworkObjectReference itemParentNetworkObjectReference)
+    {
+        ParentToHandClientRpc(itemParentNetworkObjectReference);
+    }
+
+    [ClientRpc]
+    private void ParentToHandClientRpc(NetworkObjectReference itemParentNetworkObjectReference)
+    {
+        itemParentNetworkObjectReference.TryGet(out NetworkObject itemNetworkObject);
+        PlayerController parent = itemNetworkObject.GetComponent<PlayerController>();
+
+        targetTransform = PlayerController.LocalInstance.InventoryController.GetHandTransform();
+        HideCollider();
     }
 }
